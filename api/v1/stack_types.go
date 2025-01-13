@@ -49,6 +49,7 @@ type StackStatus struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:resource:scope=Cluster
 
 // Stack is the Schema for the stacks API.
 type Stack struct {
