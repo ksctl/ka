@@ -1,0 +1,9 @@
+apiVersion: app.ksctl.com/v1
+kind: Stack
+metadata:
+  labels:
+    app.kubernetes.io/name: ka
+    app.kubernetes.io/managed-by: kustomize
+  name: stack-sample
+spec:
+  # TODO(user): Add fields here

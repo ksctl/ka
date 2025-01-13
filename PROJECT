@@ -7,4 +7,14 @@ layout:
 - go.kubebuilder.io/v4
 projectName: ka
 repo: github.com/ksctl/ka
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: ksctl.com
+  group: app
+  kind: Stack
+  path: github.com/ksctl/ka/api/v1
+  version: v1
 version: "3"
