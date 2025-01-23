@@ -18,8 +18,12 @@ package controller
 
 import (
 	"context"
+	"slices"
+	"time"
 
+	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/dynamic"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -30,27 +34,123 @@ import (
 // StackReconciler reconciles a Stack object
 type StackReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	DynamicClient dynamic.Interface
+	RESTMapper    meta.RESTMapper
+	Scheme        *runtime.Scheme
 }
+
+const managerFinalizer string = "finalizer.stack.app.ksctl.com"
 
 // +kubebuilder:rbac:groups=app.ksctl.com,resources=stacks,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=app.ksctl.com,resources=stacks/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=app.ksctl.com,resources=stacks/finalizers,verbs=update
+// +kubebuilder:rbac:groups=*,resources=*,verbs=get;list;watch;create;update;patch;delete
 
-// Reconcile is part of the main kubernetes reconciliation loop which aims to
-// move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the Stack object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.19.4/pkg/reconcile
 func (r *StackReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	l := log.FromContext(ctx)
+	l.Info("Reconciling Stack", "stack", req.NamespacedName)
 
-	// TODO(user): your logic here
+	instance := &appv1.Stack{}
 
+	if err := r.Get(ctx, req.NamespacedName, instance); err != nil {
+		if client.IgnoreNotFound(err) == nil {
+			return ctrl.Result{}, nil // Object deleted, no requeue
+		}
+		l.Error(err, "Failed to get ClusterAddon")
+		return ctrl.Result{RequeueAfter: time.Second * 10}, err
+	}
+
+	if instance.Status.StatusCode == "" {
+		instance.Status.StatusCode = appv1.WorkingOn
+		if err := r.Status().Update(ctx, instance); err != nil {
+			l.Error(err, "Failed to update initial status")
+			return ctrl.Result{RequeueAfter: time.Second * 5}, err
+		}
+	}
+
+	if !instance.DeletionTimestamp.IsZero() {
+		return r.processDeletion(ctx, instance)
+	}
+
+	if !slices.Contains(instance.Finalizers, managerFinalizer) {
+		return r.addFinalizer(ctx, instance)
+	}
+
+	return r.processInstall(ctx, instance)
+}
+
+func (r *StackReconciler) processInstall(ctx context.Context, instance *appv1.Stack) (ctrl.Result, error) {
+	l := log.FromContext(ctx)
+
+	if err := r.InstallApp(ctx, instance); err != nil {
+		l.Error(err, "Failed to install app")
+
+		instance.Status.StatusCode = appv1.Failure
+		instance.Status.ReasonOfFailure = err.Error() + "\nFailed to install app"
+
+		if err := r.Status().Update(ctx, instance); err != nil {
+			l.Error(err, "Failed to update status")
+			return ctrl.Result{RequeueAfter: time.Second * 5}, err
+		}
+
+		return ctrl.Result{RequeueAfter: time.Second * 5}, err
+	}
+
+	instance.Status.StatusCode = appv1.Success
+	instance.Status.ReasonOfFailure = ""
+	if err := r.Status().Update(ctx, instance); err != nil {
+		l.Error(err, "Failed to update status")
+		return ctrl.Result{RequeueAfter: time.Second * 5}, err
+	}
+	return ctrl.Result{}, nil
+}
+
+func (r *StackReconciler) processDeletion(ctx context.Context, instance *appv1.Stack) (ctrl.Result, error) {
+	l := log.FromContext(ctx)
+
+	if !slices.Contains(instance.Finalizers, managerFinalizer) {
+		l.Info("Finalizer already removed")
+		return ctrl.Result{}, nil
+	}
+
+	if err := r.UninstallApp(ctx, instance); err != nil {
+		l.Error(err, "Failed to uninstall app")
+		return ctrl.Result{RequeueAfter: time.Second * 5}, err
+	}
+
+	if _, err := r.removeFinalizer(ctx, instance); err != nil {
+		l.Error(err, "Failed to remove finalizer")
+		return ctrl.Result{RequeueAfter: time.Second * 5}, err
+	}
+
+	return ctrl.Result{}, nil
+}
+
+func (r *StackReconciler) addFinalizer(ctx context.Context, instance *appv1.Stack) (ctrl.Result, error) {
+	instance.Finalizers = append(instance.Finalizers, managerFinalizer)
+	if err := r.Update(ctx, instance); err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 5}, err
+	}
+	return ctrl.Result{Requeue: true}, nil
+}
+
+func (r *StackReconciler) removeFinalizer(ctx context.Context, instance *appv1.Stack) (ctrl.Result, error) {
+	if !slices.Contains(instance.Finalizers, managerFinalizer) {
+		return ctrl.Result{}, nil
+	}
+
+	var v []string
+
+	for _, f := range instance.Finalizers {
+		if f != managerFinalizer {
+			v = append(v, f)
+		}
+	}
+
+	instance.Finalizers = v
+	if err := r.Update(ctx, instance); err != nil {
+		return ctrl.Result{RequeueAfter: time.Second * 5}, err
+	}
 	return ctrl.Result{}, nil
 }
 

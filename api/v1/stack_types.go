@@ -31,9 +31,6 @@ const (
 
 // StackSpec defines the desired state of Stack.
 type StackSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
 	StackName string `json:"stackName"`
 
 	Overrides *apiextensionsv1.JSON `json:"overrides,omitempty"`
@@ -41,8 +38,6 @@ type StackSpec struct {
 
 // StackStatus defines the observed state of Stack.
 type StackStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 	StatusCode      StackStatusCode `json:"statusCode,omitempty"`
 	ReasonOfFailure string          `json:"reasonOfFailure,omitempty"`
 }
