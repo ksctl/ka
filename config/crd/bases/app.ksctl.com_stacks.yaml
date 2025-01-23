@@ -39,6 +39,10 @@ spec:
           spec:
             description: StackSpec defines the desired state of Stack.
             properties:
+              disableComponents:
+                items:
+                  type: string
+                type: array
               overrides:
                 x-kubernetes-preserve-unknown-fields: true
               stackName:

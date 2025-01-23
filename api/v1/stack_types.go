@@ -33,6 +33,8 @@ const (
 type StackSpec struct {
 	StackName string `json:"stackName"`
 
+	DisableComponents []string `json:"disableComponents,omitempty"`
+
 	Overrides *apiextensionsv1.JSON `json:"overrides,omitempty"`
 }
 

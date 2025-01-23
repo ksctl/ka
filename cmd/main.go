@@ -19,6 +19,7 @@ package main
 import (
 	"crypto/tls"
 	"flag"
+	"github.com/ksctl/ksctl/pkg/poller"
 	"os"
 	"path/filepath"
 
@@ -238,6 +239,9 @@ func main() {
 		setupLog.Error(err, "unable to set up ready check")
 		os.Exit(1)
 	}
+
+	// Start the Ksctl Poller
+	poller.InitSharedGithubReleasePoller()
 
 	setupLog.Info("starting manager")
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
