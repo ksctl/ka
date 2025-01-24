@@ -37,6 +37,14 @@ type StackReconciler struct {
 	DynamicClient dynamic.Interface
 	RESTMapper    meta.RESTMapper
 	Scheme        *runtime.Scheme
+	state         *StackState
+}
+
+func (r *StackReconciler) InitializeStorage(ctx context.Context) error {
+	if r.state == nil {
+		return r.Load(ctx)
+	}
+	return nil
 }
 
 const managerFinalizer string = "finalizer.stack.app.ksctl.com"
@@ -49,6 +57,11 @@ const managerFinalizer string = "finalizer.stack.app.ksctl.com"
 func (r *StackReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	l := log.FromContext(ctx)
 	l.Info("Reconciling Stack", "stack", req.NamespacedName)
+
+	if err := r.InitializeStorage(ctx); err != nil {
+		l.Error(err, "Failed to initialize storage")
+		return ctrl.Result{RequeueAfter: time.Second * 5}, err
+	}
 
 	instance := &appv1.Stack{}
 
@@ -82,7 +95,7 @@ func (r *StackReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 func (r *StackReconciler) processInstall(ctx context.Context, instance *appv1.Stack) (ctrl.Result, error) {
 	l := log.FromContext(ctx)
 
-	if err := r.InstallApp(ctx, instance); err != nil {
+	if err := r.Add(ctx, instance); err != nil {
 		l.Error(err, "Failed to install app")
 
 		instance.Status.StatusCode = appv1.Failure
@@ -113,7 +126,7 @@ func (r *StackReconciler) processDeletion(ctx context.Context, instance *appv1.S
 		return ctrl.Result{}, nil
 	}
 
-	if err := r.UninstallApp(ctx, instance); err != nil {
+	if err := r.Remove(ctx, instance); err != nil {
 		l.Error(err, "Failed to uninstall app")
 		return ctrl.Result{RequeueAfter: time.Second * 5}, err
 	}

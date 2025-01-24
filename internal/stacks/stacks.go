@@ -2,6 +2,7 @@ package stacks
 
 import (
 	"context"
+
 	gitOpsStandard "github.com/ksctl/ka/internal/stacks/gitops"
 	monitoringLite "github.com/ksctl/ka/internal/stacks/monitoring/lite"
 	"github.com/ksctl/ksctl/pkg/apps/stack"
@@ -23,4 +24,11 @@ func Get(ctx context.Context, log logger.Logger, stkID string) (func(stack.Appli
 		)
 	}
 	return fn, nil
+}
+
+func GetComponentVersionOverriding(component stack.Component) string {
+	if component.HandlerType == stack.ComponentTypeKubectl {
+		return component.Kubectl.Version
+	}
+	return component.Helm.Charts[0].Version
 }
