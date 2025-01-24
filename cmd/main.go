@@ -19,11 +19,13 @@ package main
 import (
 	"crypto/tls"
 	"flag"
+	"github.com/ksctl/ksctl/pkg/poller"
 	"os"
 	"path/filepath"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
+	"k8s.io/client-go/dynamic"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -36,6 +38,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/metrics/filters"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
+
+	appv1 "github.com/ksctl/ka/api/v1"
+	"github.com/ksctl/ka/internal/controller"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -47,6 +52,7 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
+	utilruntime.Must(appv1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 
@@ -198,6 +204,15 @@ func main() {
 		os.Exit(1)
 	}
 
+	if err = (&controller.StackReconciler{
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		DynamicClient: dynamic.NewForConfigOrDie(mgr.GetConfig()),
+		RESTMapper:    mgr.GetRESTMapper(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "Stack")
+		os.Exit(1)
+	}
 	// +kubebuilder:scaffold:builder
 
 	if metricsCertWatcher != nil {
@@ -224,6 +239,9 @@ func main() {
 		setupLog.Error(err, "unable to set up ready check")
 		os.Exit(1)
 	}
+
+	// Start the Ksctl Poller
+	poller.InitSharedGithubReleasePoller()
 
 	setupLog.Info("starting manager")
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
