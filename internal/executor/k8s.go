@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 
+	"github.com/ksctl/ksctl/pkg/consts"
 	"github.com/ksctl/ksctl/pkg/k8s"
 	"github.com/ksctl/ksctl/pkg/logger"
 	"k8s.io/client-go/rest"
@@ -14,7 +15,7 @@ func K8sDeployHandler(
 	c *rest.Config,
 	app *k8s.App,
 ) error {
-	obj, err := k8s.NewK8sClient(ctx, logger.NewStructuredLogger(-1, os.Stdout), c)
+	obj, err := k8s.NewK8sClient(context.WithValue(ctx, consts.KsctlModuleNameKey, "ksctl.com/k8s-client"), logger.NewStructuredLogger(-1, os.Stdout), c)
 	if err != nil {
 		return err
 	}
@@ -27,7 +28,7 @@ func K8sUninstallHandler(
 	c *rest.Config,
 	app *k8s.App,
 ) error {
-	obj, err := k8s.NewK8sClient(ctx, logger.NewStructuredLogger(-1, os.Stdout), c)
+	obj, err := k8s.NewK8sClient(context.WithValue(ctx, consts.KsctlModuleNameKey, "ksctl.com/k8s-client"), logger.NewStructuredLogger(-1, os.Stdout), c)
 	if err != nil {
 		return err
 	}
