@@ -4,9 +4,9 @@ import (
 	"context"
 	"os"
 
-	"github.com/ksctl/ksctl/pkg/consts"
-	ksctlHelm "github.com/ksctl/ksctl/pkg/helm"
-	"github.com/ksctl/ksctl/pkg/logger"
+	"github.com/ksctl/ksctl/v2/pkg/consts"
+	ksctlHelm "github.com/ksctl/ksctl/v2/pkg/helm"
+	"github.com/ksctl/ksctl/v2/pkg/logger"
 )
 
 func HelmDeployHandler(ctx context.Context, app *ksctlHelm.App) error {

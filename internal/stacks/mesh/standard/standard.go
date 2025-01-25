@@ -2,7 +2,7 @@ package standard
 
 import (
 	"github.com/ksctl/ka/internal/apps/istio"
-	"github.com/ksctl/ksctl/pkg/apps/stack"
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
 )
 
 const (

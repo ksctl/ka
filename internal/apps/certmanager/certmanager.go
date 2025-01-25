@@ -5,12 +5,12 @@ import (
 	"strings"
 
 	"github.com/ksctl/ka/internal/apps"
-	"github.com/ksctl/ksctl/pkg/apps/stack"
-	"github.com/ksctl/ksctl/pkg/helm"
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
+	"github.com/ksctl/ksctl/v2/pkg/helm"
 
-	"github.com/ksctl/ksctl/pkg/poller"
+	"github.com/ksctl/ksctl/v2/pkg/poller"
 
-	"github.com/ksctl/ksctl/pkg/utilities"
+	"github.com/ksctl/ksctl/v2/pkg/utilities"
 )
 
 func getCertManagerComponentOverridings(p stack.ComponentOverrides) (

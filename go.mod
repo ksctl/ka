@@ -5,7 +5,7 @@ go 1.23.3
 toolchain go1.23.4
 
 require (
-	github.com/ksctl/ksctl v2.0.0-rc.1+incompatible
+	github.com/ksctl/ksctl/v2 v2.0.0-rc.1
 	github.com/onsi/ginkgo/v2 v2.21.0
 	github.com/onsi/gomega v1.35.1
 	github.com/stretchr/testify v1.10.0
@@ -15,8 +15,6 @@ require (
 	k8s.io/client-go v0.32.0
 	sigs.k8s.io/controller-runtime v0.19.4
 )
-
-replace github.com/ksctl/ksctl => ../ksctl
 
 require (
 	dario.cat/mergo v1.0.1 // indirect

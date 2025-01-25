@@ -4,9 +4,9 @@ import (
 	"context"
 	"os"
 
-	"github.com/ksctl/ksctl/pkg/consts"
-	"github.com/ksctl/ksctl/pkg/k8s"
-	"github.com/ksctl/ksctl/pkg/logger"
+	"github.com/ksctl/ksctl/v2/pkg/consts"
+	"github.com/ksctl/ksctl/v2/pkg/k8s"
+	"github.com/ksctl/ksctl/v2/pkg/logger"
 	"k8s.io/client-go/rest"
 )
 

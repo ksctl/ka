@@ -2,12 +2,12 @@ package istio
 
 import (
 	"github.com/ksctl/ka/internal/apps"
-	"github.com/ksctl/ksctl/pkg/apps/stack"
-	"github.com/ksctl/ksctl/pkg/helm"
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
+	"github.com/ksctl/ksctl/v2/pkg/helm"
 	"strings"
 
-	"github.com/ksctl/ksctl/pkg/poller"
-	"github.com/ksctl/ksctl/pkg/utilities"
+	"github.com/ksctl/ksctl/v2/pkg/poller"
+	"github.com/ksctl/ksctl/v2/pkg/utilities"
 )
 
 func getIstioComponentOverridings(p stack.ComponentOverrides) (version *string, helmBaseChartOverridings map[string]interface{}, helmIstiodChartOverridings map[string]interface{}) {

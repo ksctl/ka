@@ -3,11 +3,11 @@ package argorollouts
 import (
 	"fmt"
 	"github.com/ksctl/ka/internal/apps"
-	"github.com/ksctl/ksctl/pkg/apps/stack"
-	"github.com/ksctl/ksctl/pkg/k8s"
-	"github.com/ksctl/ksctl/pkg/utilities"
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
+	"github.com/ksctl/ksctl/v2/pkg/k8s"
+	"github.com/ksctl/ksctl/v2/pkg/utilities"
 
-	"github.com/ksctl/ksctl/pkg/poller"
+	"github.com/ksctl/ksctl/v2/pkg/poller"
 )
 
 func getArgorolloutsComponentOverridings(p stack.ComponentOverrides) (
