@@ -9,6 +9,7 @@ import (
 	appv1 "github.com/ksctl/ka/api/v1"
 	"github.com/ksctl/ka/internal/executor"
 	"github.com/ksctl/ka/internal/stacks"
+	"github.com/ksctl/ka/internal/stacks/wasm"
 	"github.com/ksctl/ksctl/pkg/apps/stack"
 	ksctlErrors "github.com/ksctl/ksctl/pkg/errors"
 	"github.com/ksctl/ksctl/pkg/logger"
@@ -82,10 +83,7 @@ func (r *StackReconciler) Remove(ctx context.Context, app *appv1.Stack) error {
 			if v.HandlerType == stack.ComponentTypeKubectl {
 				if k8sErr := executor.K8sUninstallHandler(
 					ctx,
-					r.Client,
-					r.DynamicClient,
-					r.RESTMapper,
-					r.Scheme,
+					r.RestConfig,
 					v.Kubectl,
 				); k8sErr != nil {
 					return k8sErr
@@ -101,6 +99,12 @@ func (r *StackReconciler) Remove(ctx context.Context, app *appv1.Stack) error {
 			delete(r.state.Stacks[app.Spec.StackName].Components, string(componentId))
 		}
 	}
+	if wasm.ShouldPerformAdditionalProcessing(stack.ID(app.Spec.StackName)) {
+		if err := wasm.AfterRemoval(ctx, r.Client); err != nil {
+			l.Error(err, "Failed to perform additional processing", "purpose", "wasm/node-annotate")
+			return err
+		}
+	}
 	delete(r.state.Stacks, app.Spec.StackName)
 	l.Info("Successfully uninstalled", "stack", app.Spec.StackName)
 	return nil
@@ -110,18 +114,19 @@ func (r *StackReconciler) Add(ctx context.Context, app *appv1.Stack) error {
 	l := log.FromContext(ctx)
 	kl := logger.NewStructuredLogger(-1, os.Stdout)
 
-	if r.WasStackInstalled(app.Spec.StackName) {
-		l.Info("Already installed", "stack", app.Spec.StackName)
-		return nil
-	}
-
 	manifest, err := GetStackManifest(kl, app)
 	if err != nil {
 		return err
 	}
 
-	appState := AppState{
-		Components: map[string]ComponentState{},
+	var appState AppState
+	if r.WasStackInstalled(app.Spec.StackName) {
+		l.Info("Already installed checking for components", "stack", app.Spec.StackName)
+		appState = r.state.Stacks[app.Spec.StackName]
+	} else {
+		appState = AppState{
+			Components: map[string]ComponentState{},
+		}
 	}
 
 	defer func() {
@@ -151,10 +156,7 @@ func (r *StackReconciler) Add(ctx context.Context, app *appv1.Stack) error {
 			if v.HandlerType == stack.ComponentTypeKubectl {
 				if k8sErr := executor.K8sDeployHandler(
 					ctx,
-					r.Client,
-					r.DynamicClient,
-					r.RESTMapper,
-					r.Scheme,
+					r.RestConfig,
 					v.Kubectl,
 				); k8sErr != nil {
 					return k8sErr
@@ -170,6 +172,12 @@ func (r *StackReconciler) Add(ctx context.Context, app *appv1.Stack) error {
 			appState.Components[string(componentId)] = ComponentState{
 				Ver: ver,
 			}
+		}
+	}
+	if wasm.ShouldPerformAdditionalProcessing(stack.ID(app.Spec.StackName)) {
+		if err := wasm.AfterInstall(ctx, r.Client); err != nil {
+			l.Error(err, "Failed to perform additional processing", "purpose", "wasm/node-annotate")
+			return err
 		}
 	}
 

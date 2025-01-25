@@ -2,12 +2,13 @@ package spinkube
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/ksctl/ka/internal/apps"
 	"github.com/ksctl/ka/internal/apps/kwasm"
 	"github.com/ksctl/ksctl/pkg/apps/stack"
 	"github.com/ksctl/ksctl/pkg/helm"
 	"github.com/ksctl/ksctl/pkg/k8s"
-	"strings"
 
 	"github.com/ksctl/ksctl/pkg/poller"
 
@@ -124,7 +125,10 @@ func spinkubeReturnHelper(version, url, postInstall string) (stack.Component, er
 }
 
 const (
-	SKU stack.ComponentID = "spinkube"
+	OperatorCrdSKU          stack.ComponentID = "spinkube-operator-crd"
+	OperatorRuntimeClassSKU stack.ComponentID = "spinkube-operator-runtime-class"
+	OperatorShimExecutorSKU stack.ComponentID = "spinkube-operator-shim-executor"
+	OperatorSKU             stack.ComponentID = "spinkube-operator"
 )
 
 func SpinOperatorComponent(params stack.ComponentOverrides) (stack.Component, error) {

@@ -1,11 +1,12 @@
 package certmanager
 
 import (
+	"slices"
+	"strings"
+
 	"github.com/ksctl/ka/internal/apps"
 	"github.com/ksctl/ksctl/pkg/apps/stack"
 	"github.com/ksctl/ksctl/pkg/helm"
-	"slices"
-	"strings"
 
 	"github.com/ksctl/ksctl/pkg/poller"
 
@@ -54,7 +55,7 @@ func setCertManagerComponentOverridings(params stack.ComponentOverrides) (
 
 	overridings = map[string]any{
 		"crds": map[string]any{
-			"enabled": "true",
+			"enabled": true,
 		},
 	}
 

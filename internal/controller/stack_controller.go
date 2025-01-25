@@ -21,9 +21,8 @@ import (
 	"slices"
 	"time"
 
-	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/dynamic"
+	"k8s.io/client-go/rest"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -34,10 +33,9 @@ import (
 // StackReconciler reconciles a Stack object
 type StackReconciler struct {
 	client.Client
-	DynamicClient dynamic.Interface
-	RESTMapper    meta.RESTMapper
-	Scheme        *runtime.Scheme
-	state         *StackState
+	RestConfig *rest.Config
+	Scheme     *runtime.Scheme
+	state      *StackState
 }
 
 func (r *StackReconciler) InitializeStorage(ctx context.Context) error {

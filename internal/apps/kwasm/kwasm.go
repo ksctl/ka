@@ -1,18 +1,20 @@
 package kwasm
 
 import (
+	"strings"
+
 	"github.com/ksctl/ka/internal/apps"
 	"github.com/ksctl/ksctl/pkg/apps/stack"
 	"github.com/ksctl/ksctl/pkg/helm"
 	"github.com/ksctl/ksctl/pkg/k8s"
-	"strings"
 
 	"github.com/ksctl/ksctl/pkg/utilities"
 )
 
 const (
 	OperatorChartOverridingsKey string            = "kwasmOperatorChartOverridings"
-	SKU                         stack.ComponentID = "kwasm"
+	OperatorSKU                 stack.ComponentID = "kwasm-operator"
+	RuntimeSKU                  stack.ComponentID = "kwasm-runtime-class"
 )
 
 func getKwasmOperatorComponentOverridings(p stack.ComponentOverrides) (

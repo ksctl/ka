@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"encoding/json"
+
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -23,7 +24,7 @@ func getConfigmap() *corev1.ConfigMap {
 	return &corev1.ConfigMap{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "ka-state",
-			Namespace: "ksctl-system",
+			Namespace: "ka-system",
 		},
 		BinaryData: map[string][]byte{},
 	}
@@ -31,7 +32,7 @@ func getConfigmap() *corev1.ConfigMap {
 
 func (r *StackReconciler) Save(ctx context.Context) error {
 	cf := &corev1.ConfigMap{}
-	if err := r.Get(ctx, client.ObjectKey{Namespace: "ksctl-system", Name: "ka-state"}, cf); err != nil {
+	if err := r.Get(ctx, client.ObjectKey{Namespace: "ka-system", Name: "ka-state"}, cf); err != nil {
 		if errors.IsNotFound(err) {
 			_cf := getConfigmap()
 			_cf.BinaryData["data"], err = json.Marshal(r.state)
@@ -60,7 +61,7 @@ func (r *StackReconciler) Save(ctx context.Context) error {
 
 func (r *StackReconciler) Load(ctx context.Context) error {
 	cf := &corev1.ConfigMap{}
-	if err := r.Get(ctx, client.ObjectKey{Namespace: "ksctl-system", Name: "ka-state"}, cf); err != nil {
+	if err := r.Get(ctx, client.ObjectKey{Namespace: "ka-system", Name: "ka-state"}, cf); err != nil {
 		if errors.IsNotFound(err) {
 			r.state = &StackState{Stacks: map[string]AppState{}}
 			return nil
