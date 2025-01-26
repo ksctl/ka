@@ -3,7 +3,7 @@ package gitops
 import (
 	"github.com/ksctl/ka/internal/apps/argocd"
 	"github.com/ksctl/ka/internal/apps/argorollouts"
-	"github.com/ksctl/ksctl/pkg/apps/stack"
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
 )
 
 const (

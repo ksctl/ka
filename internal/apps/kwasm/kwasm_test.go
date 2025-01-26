@@ -1,9 +1,10 @@
 package kwasm
 
 import (
-	"github.com/ksctl/ksctl/pkg/apps/stack"
-	"github.com/ksctl/ksctl/pkg/poller"
 	"testing"
+
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
+	"github.com/ksctl/ksctl/v2/pkg/poller"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -19,9 +20,8 @@ func TestMain(m *testing.M) {
 
 func TestSetKwasmOperatorComponentOverridings_DefaultValues(t *testing.T) {
 	params := stack.ComponentOverrides{}
-	version, overridings, err := setKwasmOperatorComponentOverridings(params)
+	version, overridings := setKwasmOperatorComponentOverridings(params)
 
-	assert.NoError(t, err)
 	assert.Equal(t, "latest", version)
 	assert.Nil(t, overridings)
 }
@@ -33,9 +33,8 @@ func TestSetKwasmOperatorComponentOverridings_WithOverrides(t *testing.T) {
 			"someKey": "someValue",
 		},
 	}
-	version, overridings, err := setKwasmOperatorComponentOverridings(params)
+	version, overridings := setKwasmOperatorComponentOverridings(params)
 
-	assert.NoError(t, err)
 	assert.Equal(t, "v1.2.3", version)
 	assert.NotNil(t, overridings)
 }

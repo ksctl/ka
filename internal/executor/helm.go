@@ -4,13 +4,14 @@ import (
 	"context"
 	"os"
 
-	ksctlHelm "github.com/ksctl/ksctl/pkg/helm"
-	"github.com/ksctl/ksctl/pkg/logger"
+	"github.com/ksctl/ksctl/v2/pkg/consts"
+	ksctlHelm "github.com/ksctl/ksctl/v2/pkg/helm"
+	"github.com/ksctl/ksctl/v2/pkg/logger"
 )
 
 func HelmDeployHandler(ctx context.Context, app *ksctlHelm.App) error {
 
-	obj, err := ksctlHelm.NewInClusterHelmClient(ctx, logger.NewStructuredLogger(-1, os.Stdout))
+	obj, err := ksctlHelm.NewInClusterHelmClient(context.WithValue(ctx, consts.KsctlModuleNameKey, "ksctl.com/helm-client"), logger.NewStructuredLogger(-1, os.Stdout))
 	if err != nil {
 		return err
 	}
@@ -23,7 +24,7 @@ func HelmDeployHandler(ctx context.Context, app *ksctlHelm.App) error {
 
 func HelmUninstallHandler(ctx context.Context, app *ksctlHelm.App) error {
 
-	obj, err := ksctlHelm.NewInClusterHelmClient(ctx, logger.NewStructuredLogger(-1, os.Stdout))
+	obj, err := ksctlHelm.NewInClusterHelmClient(context.WithValue(ctx, consts.KsctlModuleNameKey, "ksctl.com/helm-client"), logger.NewStructuredLogger(-1, os.Stdout))
 	if err != nil {
 		return err
 	}

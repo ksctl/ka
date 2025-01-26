@@ -1,8 +1,9 @@
 package apps
 
 import (
-	"github.com/ksctl/ksctl/pkg/utilities"
 	"testing"
+
+	"github.com/ksctl/ksctl/v2/pkg/utilities"
 )
 
 func TestGetVersionIfItsNotNilAndLatest(t *testing.T) {

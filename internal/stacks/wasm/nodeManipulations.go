@@ -3,7 +3,7 @@ package wasm
 import (
 	"context"
 
-	"github.com/ksctl/ksctl/pkg/apps/stack"
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/util/retry"
 	"sigs.k8s.io/controller-runtime/pkg/client"

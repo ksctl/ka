@@ -2,10 +2,11 @@ package argocd
 
 import (
 	"fmt"
+
 	"github.com/ksctl/ka/internal/apps"
-	"github.com/ksctl/ksctl/pkg/apps/stack"
-	"github.com/ksctl/ksctl/pkg/k8s"
-	"github.com/ksctl/ksctl/pkg/utilities"
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
+	"github.com/ksctl/ksctl/v2/pkg/k8s"
+	"github.com/ksctl/ksctl/v2/pkg/utilities"
 )
 
 func getArgocdComponentOverridings(p stack.ComponentOverrides) (
@@ -104,7 +105,7 @@ https://argo-cd.readthedocs.io/en/%s/operator-manual/installation/#non-high-avai
 		defaultVals()
 	}
 
-	return
+	return version, url, postInstall, namespace
 }
 
 const (

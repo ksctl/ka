@@ -1,11 +1,12 @@
 package istio
 
 import (
-	"github.com/ksctl/ksctl/pkg/apps/stack"
-	"github.com/ksctl/ksctl/pkg/poller"
 	"sort"
 	"strings"
 	"testing"
+
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
+	"github.com/ksctl/ksctl/v2/pkg/poller"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -24,9 +25,7 @@ func TestMain(m *testing.M) {
 		})
 
 		for i := range vers {
-			if strings.HasPrefix(vers[i], "v") {
-				vers[i] = strings.TrimPrefix(vers[i], "v")
-			}
+			vers[i] = strings.TrimPrefix(vers[i], "v")
 		}
 
 		return vers, nil

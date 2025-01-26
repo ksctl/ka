@@ -4,11 +4,11 @@ import (
 	"strings"
 
 	"github.com/ksctl/ka/internal/apps"
-	"github.com/ksctl/ksctl/pkg/apps/stack"
-	"github.com/ksctl/ksctl/pkg/helm"
-	"github.com/ksctl/ksctl/pkg/k8s"
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
+	"github.com/ksctl/ksctl/v2/pkg/helm"
+	"github.com/ksctl/ksctl/v2/pkg/k8s"
 
-	"github.com/ksctl/ksctl/pkg/utilities"
+	"github.com/ksctl/ksctl/v2/pkg/utilities"
 )
 
 const (
@@ -44,7 +44,6 @@ func getKwasmOperatorComponentOverridings(p stack.ComponentOverrides) (
 func setKwasmOperatorComponentOverridings(params stack.ComponentOverrides) (
 	version string,
 	overridings map[string]any,
-	err error,
 ) {
 
 	_version, _kwasmOperatorChartOverridings := getKwasmOperatorComponentOverridings(params)
@@ -71,14 +70,9 @@ func KwasmComponent(params stack.ComponentOverrides) (stack.Component, error) {
 }
 
 func KwasmOperatorComponent(params stack.ComponentOverrides) (stack.Component, error) {
-	version, kwasmOperatorChartOverridings, err := setKwasmOperatorComponentOverridings(params)
-	if err != nil {
-		return stack.Component{}, err
-	}
+	version, kwasmOperatorChartOverridings := setKwasmOperatorComponentOverridings(params)
 
-	if strings.HasPrefix(version, "v") {
-		version = strings.TrimPrefix(version, "v")
-	}
+	version = strings.TrimPrefix(version, "v")
 
 	return stack.Component{
 		Helm: &helm.App{

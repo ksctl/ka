@@ -8,9 +8,9 @@ import (
 	monitoringLite "github.com/ksctl/ka/internal/stacks/monitoring/lite"
 	kwasmPlus "github.com/ksctl/ka/internal/stacks/wasm/kwasm"
 	spinkubeStandard "github.com/ksctl/ka/internal/stacks/wasm/spinkube"
-	"github.com/ksctl/ksctl/pkg/apps/stack"
-	ksctlErrors "github.com/ksctl/ksctl/pkg/errors"
-	"github.com/ksctl/ksctl/pkg/logger"
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
+	ksctlErrors "github.com/ksctl/ksctl/v2/pkg/errors"
+	"github.com/ksctl/ksctl/v2/pkg/logger"
 )
 
 var stackManifests = map[stack.ID]func(stack.ApplicationParams) (stack.ApplicationStack, error){

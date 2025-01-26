@@ -2,12 +2,13 @@ package argorollouts
 
 import (
 	"fmt"
-	"github.com/ksctl/ka/internal/apps"
-	"github.com/ksctl/ksctl/pkg/apps/stack"
-	"github.com/ksctl/ksctl/pkg/k8s"
-	"github.com/ksctl/ksctl/pkg/utilities"
 
-	"github.com/ksctl/ksctl/pkg/poller"
+	"github.com/ksctl/ka/internal/apps"
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
+	"github.com/ksctl/ksctl/v2/pkg/k8s"
+	"github.com/ksctl/ksctl/v2/pkg/utilities"
+
+	"github.com/ksctl/ksctl/v2/pkg/poller"
 )
 
 func getArgorolloutsComponentOverridings(p stack.ComponentOverrides) (
@@ -47,7 +48,7 @@ func setArgorolloutsComponentOverridings(params stack.ComponentOverrides) (
 ) {
 	releases, err := poller.GetSharedPoller().Get("argoproj", "argo-rollouts")
 	if err != nil {
-		return
+		return "", nil, "", "", err
 	}
 
 	url = nil
@@ -98,7 +99,8 @@ https://argo-rollouts.readthedocs.io/en/%v/installation/#controller-installation
 	} else {
 		defaultVals()
 	}
-	return
+
+	return version, url, postInstall, namespace, nil
 }
 
 const (

@@ -2,7 +2,7 @@ package lite
 
 import (
 	"github.com/ksctl/ka/internal/apps/kubeprometheus"
-	"github.com/ksctl/ksctl/pkg/apps/stack"
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
 )
 
 const (

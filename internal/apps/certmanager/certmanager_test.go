@@ -1,10 +1,11 @@
 package certmanager
 
 import (
-	"github.com/ksctl/ksctl/pkg/apps/stack"
-	"github.com/ksctl/ksctl/pkg/poller"
 	"sort"
 	"testing"
+
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
+	"github.com/ksctl/ksctl/v2/pkg/poller"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -43,7 +44,7 @@ func TestCertManagerComponentWithNilParams(t *testing.T) {
 		if v, ok := v.(map[string]any)["enabled"]; !ok {
 			t.Fatal("missing enabled")
 		} else {
-			assert.Equal(t, "true", v)
+			assert.Equal(t, true, v)
 		}
 	}
 }
@@ -84,7 +85,7 @@ func TestCertManagerComponentWithCertManagerChartOverridings(t *testing.T) {
 		if v, ok := v.(map[string]any)["enabled"]; !ok {
 			t.Fatal("missing enabled")
 		} else {
-			assert.Equal(t, "true", v)
+			assert.Equal(t, true, v)
 		}
 	}
 }
@@ -108,7 +109,7 @@ func TestCertManagerComponentWithAllOverrides(t *testing.T) {
 		if v, ok := v.(map[string]any)["enabled"]; !ok {
 			t.Fatal("missing enabled")
 		} else {
-			assert.Equal(t, "true", v)
+			assert.Equal(t, true, v)
 		}
 	}
 }

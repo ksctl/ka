@@ -6,13 +6,13 @@ import (
 
 	"github.com/ksctl/ka/internal/apps"
 	"github.com/ksctl/ka/internal/apps/kwasm"
-	"github.com/ksctl/ksctl/pkg/apps/stack"
-	"github.com/ksctl/ksctl/pkg/helm"
-	"github.com/ksctl/ksctl/pkg/k8s"
+	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
+	"github.com/ksctl/ksctl/v2/pkg/helm"
+	"github.com/ksctl/ksctl/v2/pkg/k8s"
 
-	"github.com/ksctl/ksctl/pkg/poller"
+	"github.com/ksctl/ksctl/v2/pkg/poller"
 
-	"github.com/ksctl/ksctl/pkg/utilities"
+	"github.com/ksctl/ksctl/v2/pkg/utilities"
 )
 
 func getSpinkubeComponentOverridings(p stack.ComponentOverrides) (version *string) {
@@ -135,9 +135,8 @@ func SpinOperatorComponent(params stack.ComponentOverrides) (stack.Component, er
 
 	version, helmOverride := setSpinOperatorComponentOverridings(params)
 
-	if strings.HasPrefix(version, "v") {
-		version = strings.TrimPrefix(version, "v")
-	}
+	version = strings.TrimPrefix(version, "v")
+
 	return stack.Component{
 		HandlerType: stack.ComponentTypeHelm,
 		Helm: &helm.App{
