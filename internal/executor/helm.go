@@ -10,8 +10,18 @@ import (
 )
 
 func HelmDeployHandler(ctx context.Context, app *ksctlHelm.App) error {
+	helmOption := []ksctlHelm.Option{
+		ksctlHelm.WithDebug(),
+	}
+	if v, ok := os.LookupEnv("HELMOCI_CHARTS_DIR"); ok {
+		helmOption = append(helmOption, ksctlHelm.WithOCIChartPullDestDir(v))
+	}
 
-	obj, err := ksctlHelm.NewInClusterHelmClient(context.WithValue(ctx, consts.KsctlModuleNameKey, "ksctl.com/helm-client"), logger.NewStructuredLogger(-1, os.Stdout))
+	obj, err := ksctlHelm.NewClient(
+		context.WithValue(ctx, consts.KsctlModuleNameKey, "ksctl.com/helm-client"),
+		logger.NewStructuredLogger(-1, os.Stdout),
+		helmOption...,
+	)
 	if err != nil {
 		return err
 	}
@@ -19,12 +29,23 @@ func HelmDeployHandler(ctx context.Context, app *ksctlHelm.App) error {
 	if err := obj.HelmDeploy(app); err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func HelmUninstallHandler(ctx context.Context, app *ksctlHelm.App) error {
+	helmOption := []ksctlHelm.Option{
+		ksctlHelm.WithDebug(),
+	}
+	if v, ok := os.LookupEnv("HELMOCI_CHARTS_DIR"); ok {
+		helmOption = append(helmOption, ksctlHelm.WithOCIChartPullDestDir(v))
+	}
 
-	obj, err := ksctlHelm.NewInClusterHelmClient(context.WithValue(ctx, consts.KsctlModuleNameKey, "ksctl.com/helm-client"), logger.NewStructuredLogger(-1, os.Stdout))
+	obj, err := ksctlHelm.NewClient(
+		context.WithValue(ctx, consts.KsctlModuleNameKey, "ksctl.com/helm-client"),
+		logger.NewStructuredLogger(-1, os.Stdout),
+		helmOption...,
+	)
 	if err != nil {
 		return err
 	}
