@@ -81,7 +81,7 @@ func setCertManagerComponentOverridings(params stack.ComponentOverrides) (
 		}
 	}
 
-	return
+	return version, overridings, nil
 }
 
 const (
@@ -94,9 +94,7 @@ func CertManagerComponent(params stack.ComponentOverrides) (stack.Component, err
 		return stack.Component{}, err
 	}
 
-	if strings.HasPrefix(version, "v") {
-		version = strings.TrimPrefix(version, "v")
-	}
+	version = strings.TrimPrefix(version, "v")
 
 	return stack.Component{
 		HandlerType: stack.ComponentTypeHelm,

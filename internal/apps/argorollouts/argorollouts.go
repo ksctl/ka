@@ -2,6 +2,7 @@ package argorollouts
 
 import (
 	"fmt"
+
 	"github.com/ksctl/ka/internal/apps"
 	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
 	"github.com/ksctl/ksctl/v2/pkg/k8s"
@@ -98,7 +99,8 @@ https://argo-rollouts.readthedocs.io/en/%v/installation/#controller-installation
 	} else {
 		defaultVals()
 	}
-	return
+
+	return version, url, postInstall, namespace, nil
 }
 
 const (

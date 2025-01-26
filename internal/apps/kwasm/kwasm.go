@@ -44,7 +44,6 @@ func getKwasmOperatorComponentOverridings(p stack.ComponentOverrides) (
 func setKwasmOperatorComponentOverridings(params stack.ComponentOverrides) (
 	version string,
 	overridings map[string]any,
-	err error,
 ) {
 
 	_version, _kwasmOperatorChartOverridings := getKwasmOperatorComponentOverridings(params)
@@ -71,10 +70,7 @@ func KwasmComponent(params stack.ComponentOverrides) (stack.Component, error) {
 }
 
 func KwasmOperatorComponent(params stack.ComponentOverrides) (stack.Component, error) {
-	version, kwasmOperatorChartOverridings, err := setKwasmOperatorComponentOverridings(params)
-	if err != nil {
-		return stack.Component{}, err
-	}
+	version, kwasmOperatorChartOverridings := setKwasmOperatorComponentOverridings(params)
 
 	if strings.HasPrefix(version, "v") {
 		version = strings.TrimPrefix(version, "v")

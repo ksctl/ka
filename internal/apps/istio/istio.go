@@ -1,10 +1,11 @@
 package istio
 
 import (
+	"strings"
+
 	"github.com/ksctl/ka/internal/apps"
 	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
 	"github.com/ksctl/ksctl/v2/pkg/helm"
-	"strings"
 
 	"github.com/ksctl/ksctl/v2/pkg/poller"
 	"github.com/ksctl/ksctl/v2/pkg/utilities"
@@ -48,9 +49,6 @@ func setIsitoComponentOverridings(p stack.ComponentOverrides) (
 		return "", nil, nil, err
 	}
 
-	helmBaseChartOverridings = map[string]any{}
-	helmIstiodChartOverridings = map[string]any{}
-
 	_version, _helmBaseChartOverridings, _helmIstiodChartOverridings := getIstioComponentOverridings(p)
 
 	version = apps.GetVersionIfItsNotNilAndLatest(_version, releases[0])
@@ -68,7 +66,7 @@ func setIsitoComponentOverridings(p stack.ComponentOverrides) (
 	} else {
 		helmIstiodChartOverridings = nil
 	}
-	return
+	return version, helmBaseChartOverridings, helmIstiodChartOverridings, nil
 }
 
 const (
@@ -82,9 +80,7 @@ func IstioStandardComponent(params stack.ComponentOverrides) (stack.Component, e
 		return stack.Component{}, err
 	}
 
-	if strings.HasPrefix(version, "v") {
-		version = strings.TrimPrefix(version, "v")
-	}
+	version = strings.TrimPrefix(version, "v")
 
 	return stack.Component{
 		Helm: &helm.App{

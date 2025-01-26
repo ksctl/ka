@@ -1,10 +1,11 @@
 package kubeprometheus
 
 import (
+	"strings"
+
 	"github.com/ksctl/ka/internal/apps"
 	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
 	"github.com/ksctl/ksctl/v2/pkg/helm"
-	"strings"
 
 	"github.com/ksctl/ksctl/v2/pkg/utilities"
 )
@@ -35,7 +36,6 @@ func setKubePrometheusComponentOverridings(p stack.ComponentOverrides) (
 	version string,
 	helmKubePromChartOverridings map[string]any,
 ) {
-	helmKubePromChartOverridings = map[string]any{}
 
 	_version, _helmKubePromChartOverridings := getKubePrometheusComponentOverridings(p)
 	version = apps.GetVersionIfItsNotNilAndLatest(_version, "latest")
