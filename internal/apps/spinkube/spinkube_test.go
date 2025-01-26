@@ -1,11 +1,12 @@
 package spinkube
 
 import (
+	"sort"
+	"testing"
+
 	"github.com/ksctl/ka/internal/apps/kwasm"
 	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
 	"github.com/ksctl/ksctl/v2/pkg/poller"
-	"sort"
-	"testing"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -57,9 +57,7 @@ func KubePrometheusStandardComponent(params stack.ComponentOverrides) stack.Comp
 
 	version, helmKubePromChartOverridings := setKubePrometheusComponentOverridings(params)
 
-	if strings.HasPrefix(version, "v") {
-		version = strings.TrimPrefix(version, "v")
-	}
+	version = strings.TrimPrefix(version, "v")
 
 	return stack.Component{
 		Helm: &helm.App{

@@ -1,9 +1,10 @@
 package argocd
 
 import (
+	"testing"
+
 	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
 	"github.com/ksctl/ksctl/v2/pkg/poller"
-	"testing"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -48,7 +48,7 @@ func setArgorolloutsComponentOverridings(params stack.ComponentOverrides) (
 ) {
 	releases, err := poller.GetSharedPoller().Get("argoproj", "argo-rollouts")
 	if err != nil {
-		return
+		return "", nil, "", "", err
 	}
 
 	url = nil

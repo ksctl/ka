@@ -1,10 +1,11 @@
 package kubeprometheus
 
 import (
+	"testing"
+
 	"github.com/ksctl/ksctl/v2/pkg/apps/stack"
 	"github.com/ksctl/ksctl/v2/pkg/poller"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestMain(m *testing.M) {

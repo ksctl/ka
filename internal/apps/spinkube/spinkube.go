@@ -135,9 +135,8 @@ func SpinOperatorComponent(params stack.ComponentOverrides) (stack.Component, er
 
 	version, helmOverride := setSpinOperatorComponentOverridings(params)
 
-	if strings.HasPrefix(version, "v") {
-		version = strings.TrimPrefix(version, "v")
-	}
+	version = strings.TrimPrefix(version, "v")
+
 	return stack.Component{
 		HandlerType: stack.ComponentTypeHelm,
 		Helm: &helm.App{
