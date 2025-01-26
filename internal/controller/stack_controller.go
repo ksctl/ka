@@ -50,7 +50,7 @@ const managerFinalizer string = "finalizer.stack.app.ksctl.com"
 // +kubebuilder:rbac:groups=app.ksctl.com,resources=stacks,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=app.ksctl.com,resources=stacks/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=app.ksctl.com,resources=stacks/finalizers,verbs=update
-// +kubebuilder:rbac:groups=*,resources=*,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=*,resources=*,verbs=*
 
 func (r *StackReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	l := log.FromContext(ctx)

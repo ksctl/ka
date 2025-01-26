@@ -5,7 +5,7 @@ go 1.23.3
 toolchain go1.23.4
 
 require (
-	github.com/ksctl/ksctl/v2 v2.0.0-rc.2
+	github.com/ksctl/ksctl/v2 v2.0.0-rc.3
 	github.com/onsi/ginkgo/v2 v2.21.0
 	github.com/onsi/gomega v1.35.1
 	github.com/stretchr/testify v1.10.0
