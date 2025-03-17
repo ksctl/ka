@@ -2,7 +2,7 @@ module github.com/ksctl/ka
 
 go 1.23.3
 
-toolchain go1.23.4
+toolchain go1.24.1
 
 require (
 	github.com/ksctl/ksctl/v2 v2.0.0
@@ -11,7 +11,7 @@ require (
 	github.com/stretchr/testify v1.10.0
 	k8s.io/api v0.32.0
 	k8s.io/apiextensions-apiserver v0.31.3
-	k8s.io/apimachinery v0.32.0
+	k8s.io/apimachinery v0.32.3
 	k8s.io/client-go v0.32.0
 	sigs.k8s.io/controller-runtime v0.19.4
 )
